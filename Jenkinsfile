@@ -9,17 +9,24 @@ pipeline {
             }
         }
 
+        stage('Create Virtual Environment') {
+            steps {
+                echo 'Creating Python virtual environment...'
+                sh 'python3 -m venv jenkins-venv'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 echo 'Installing Python dependencies...'
-                sh 'pip3 install -r requirements.txt'
+                sh './jenkins-venv/bin/pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
                 echo 'Running automated tests...'
-                sh 'pytest'
+                sh './jenkins-venv/bin/pytest'
             }
         }
 
