@@ -68,8 +68,20 @@ pipeline {
 
                 sh '''
                 kubectl apply -f deployment.yaml
-                kubectl rollout restart deployment/flask-devops-app
-                kubectl rollout status deployment/flask-devops-app
+                kubectl rollout restart deployment flask-devops-app
+                kubectl rollout status deployment flask-devops-app
+                '''
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                echo 'Running Docker container...'
+
+                sh '''
+                docker stop flask-app || true
+                docker rm flask-app || true
+                docker run -d -p 5000:5000 --name flask-app $DOCKER_IMAGE:latest
                 '''
             }
         }
