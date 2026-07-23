@@ -6,6 +6,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
@@ -61,13 +62,14 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Deploy to Kubernetes') {
             steps {
-                echo 'Running Docker container...'
+                echo 'Deploying application to Kubernetes...'
+
                 sh '''
-                docker stop flask-app || true
-                docker rm flask-app || true
-                docker run -d -p 5000:5000 --name flask-app $DOCKER_IMAGE:latest
+                kubectl apply -f deployment.yaml
+                kubectl rollout restart deployment/flask-devops-app
+                kubectl rollout status deployment/flask-devops-app
                 '''
             }
         }

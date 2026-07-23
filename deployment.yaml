@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-devops-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-devops-app
+  template:
+    metadata:
+      labels:
+        app: flask-devops-app
+    spec:
+      containers:
+        - name: flask-devops-app
+          image: aadarshsorab/flask-devops-app:latest
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-devops-service
+spec:
+  type: NodePort
+  selector:
+    app: flask-devops-app
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30007
